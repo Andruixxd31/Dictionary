@@ -27,7 +27,15 @@ public class AVL<E extends Comparable<E>> {
         avl.insertar(6);
         avl.insertar(8);
         avl.insertar(6);
-        System.out.println(avl.buscar(6).dato);
+        //System.out.println(avl.buscar(6).dato);
+        System.out.println("-------Busqueda-------");
+		System.out.println("El dato: "+ avl.buscarDato(1)+ " fue encontrado en el árbol");
+		System.out.println("-------Preorden-------");
+		avl.preorden();
+		System.out.println("-------InOrden-------");
+		avl.inorden();
+		System.out.println("-------PostOrden-------");
+		avl.posorden();
     }
 
     // * ---------------- Métodos ----------------
@@ -77,6 +85,26 @@ public class AVL<E extends Comparable<E>> {
         }
     }
 
+    public E buscarDato(E valor) {
+		if(this.root==null) {
+			throw new NullPointerException("El árbol está vacio");
+		}else {
+			Nodo<E> temporal = this.root;
+			while(temporal.dato!=valor) {
+				if(valor.compareTo(temporal.dato)<0) {
+					temporal = temporal.izq;
+				}else {
+					temporal = temporal.der;
+				}
+				if(temporal == null) {
+					throw new NoSuchElementException("No se encontrarón el dato en el árbol");
+				}				
+			}
+			return temporal.dato;
+		}
+	}
+	
+    /*
     public Nodo<E> buscar(E val) {
         if (this.size == 0)
             throw new NoSuchElementException("El arbol esta vacio");
@@ -98,18 +126,63 @@ public class AVL<E extends Comparable<E>> {
         }
         return tmp;
     }
+	*/
+    
+    private void preorden(Nodo<E> current) {
+		if(current!= null) {
+			System.out.print(current.dato+",");
+			preorden(current.izq);
+			preorden(current.der);
+		}
+		
+	}
+    
+	/**
+	 * Esté método manda a llamar un método que es recursivo que ordena nuestro arbol en el recorrido preorden, raiz, izquierda y derecha
+	 * 
+	 */
+    
+	public void preorden() {
+		preorden(this.root);
+		System.out.println();
+	}
+	
 
-    // Este metodo encuentra el nodo del valor dado y lo iguala a un nodo tmp
-    public void inorden(E val) {
-        Nodo<E> tmp = buscar(val);
-        inorden(val, tmp);
+	private void inorden(Nodo<E> current){
+        if (current!=null) {
+        	inorden(current.izq);
+        	System.out.print( current.dato + ", "  );
+        	inorden(current.der);
+        }
     }
-
-    // con el nodo temporal reccoremos el arbol iniciando desde al valor dado
-    private void inorden(E val, Nodo<E> tmp) {
-
-    }
-
+	
+	/**
+	 * Esté método que manda a llamar un metodo que es recursivo que ordena nuestro arbol en el recorrido preorden,  izquierda,raiz y derecha
+	 * @param current nuestor nodo ya que usamos recursivida
+	 */
+	public void inorden() {
+		inorden(this.root);
+		System.out.println();
+	}
+	
+	private void posorden(Nodo<E> current) {
+		if(current!=null) {
+			posorden(current.izq);
+			posorden(current.der);
+			System.out.print(current.dato + ", "  );
+		}
+	}
+	
+	/**
+	 * Esté método que manda a llamar un método es recursivo que ordena nuestro arbol en el recorrido preorden,  izquierda, derecha y raiz
+	 * @param current nuestor nodo ya que usamos recursivida
+	 */
+	
+	public void posorden() {
+		posorden(this.root);
+		System.out.println();
+	}
+	
 }
 
 // * ---------------- Clase Nodo ----------------

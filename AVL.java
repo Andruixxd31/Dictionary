@@ -29,13 +29,15 @@ public class AVL<E extends Comparable<E>> {
         avl.insertar(6);
         //System.out.println(avl.buscar(6).dato);
         System.out.println("-------Busqueda-------");
-		System.out.println("El dato: "+ avl.buscarDato(1)+ " fue encontrado en el árbol");
-		System.out.println("-------Preorden-------");
-		avl.preorden();
-		System.out.println("-------InOrden-------");
-		avl.inorden();
-		System.out.println("-------PostOrden-------");
-		avl.posorden();
+        System.out.println("El dato: "+ avl.buscarDato(1)+ " fue encontrado en el árbol");
+        System.out.println("-------Preorden-------");
+        avl.preorden();
+        System.out.println("-------InOrden-------");
+        avl.inorden();
+        System.out.println("-------PostOrden-------");
+        avl.posorden();
+        System.out.println("-------Eliminar-------");
+        System.out.println(avl.eliminar(4));
     }
 
     // * ---------------- Métodos ----------------
@@ -53,6 +55,16 @@ public class AVL<E extends Comparable<E>> {
     // Todo repetidos. Tal vez se necesite un nodo Prev;
 
     // En este se encuentra el lugar del nodo para insertar
+    
+    private Nodo<E> predecesor(Nodo<E> current) {
+        Nodo<E> predecesor = current.izq;
+        while(predecesor.der!=null) {
+            predecesor = predecesor.der;
+        }
+        return predecesor;
+    }
+    
+    
     private void insertar(E valor, Nodo<E> tmp) {
         if (this.size == 0) {
             this.root = new Nodo<E>(valor);
@@ -84,26 +96,102 @@ public class AVL<E extends Comparable<E>> {
             return;
         }
     }
+    
+    
+   
+    
+    public E eliminar(E valor) {
+        try {
+            if(this.root == null) {
+                throw new NoSuchElementException("No se puede eliminar un elemento dentro de un árbol vacio");
+            }else if(this.root.dato.equals(valor)) {
+                Nodo<E> current = this.root;
+                E res  = current.dato;
+                
+                if(current.izq == null && current.der==null) {
+                    this.root = null;
+                }else if(current.izq==null) {
+                    current=current.der;
+                }else if(current.der== null) {
+                    current= current.izq;
+                }else {
+                    current.dato= eliminar(predecesor(current).dato);
+                    size++;
+                }
+                size--;
+                return res;
+            }else {
+                Nodo<E> parent = null,
+                        current=this.root;
+            
+            while (!current.dato.equals(valor) ) { 
+                parent=current;
+                if (valor.compareTo(current.dato)<0) { //Izq
+                    current=current.izq;
+                }else { //Der
+                    current=current.der;
+                }
+                
+            }
+            
+            E res = current.dato;
+            if(current.izq == null && current.der == null ) {
+                
+                if(parent.izq==current) {
+                    parent.izq = null;
+                }else {
+                    parent.der = null;
+                }
+            //cuando tiene un hijo derecho
+            }else if(current.izq == null) {
+                if(parent.izq==current) {
+                    parent.izq=current.der;
+                }else {
+                    parent.der = current.der;
+                }
+    
+            }else if(current.der == null) { //hijo izquierdo
+                if(parent.izq==current) {
+                    parent.izq=current.izq;
+                }else {
+                    parent.der = current.izq;
+                }
+            
+            }
+            //cuando tiene dos hijos
+            else {
+                current.dato=eliminar(predecesor(current).dato);
+                this.size++;
+            }
+            this.size--;
+            return res;
+            }
+        }catch(NullPointerException ex) {
+            throw new NoSuchElementException("No se puede borar un elemento que no está en el árbol");
+        }
+        
+            
+    }
 
     public E buscarDato(E valor) {
-		if(this.root==null) {
-			throw new NullPointerException("El árbol está vacio");
-		}else {
-			Nodo<E> temporal = this.root;
-			while(temporal.dato!=valor) {
-				if(valor.compareTo(temporal.dato)<0) {
-					temporal = temporal.izq;
-				}else {
-					temporal = temporal.der;
-				}
-				if(temporal == null) {
-					throw new NoSuchElementException("No se encontrarón el dato en el árbol");
-				}				
-			}
-			return temporal.dato;
-		}
-	}
-	
+        if(this.root==null) {
+            throw new NullPointerException("El árbol está vacio");
+        }else {
+            Nodo<E> temporal = this.root;
+            while(temporal.dato!=valor) {
+                if(valor.compareTo(temporal.dato)<0) {
+                    temporal = temporal.izq;
+                }else {
+                    temporal = temporal.der;
+                }
+                if(temporal == null) {
+                    throw new NoSuchElementException("No se encontrarón el dato en el árbol");
+                }               
+            }
+            return temporal.dato;
+        }
+    }
+    
     /*
     public Nodo<E> buscar(E val) {
         if (this.size == 0)
@@ -126,63 +214,63 @@ public class AVL<E extends Comparable<E>> {
         }
         return tmp;
     }
-	*/
+    */
     
     private void preorden(Nodo<E> current) {
-		if(current!= null) {
-			System.out.print(current.dato+",");
-			preorden(current.izq);
-			preorden(current.der);
-		}
-		
-	}
+        if(current!= null) {
+            System.out.print(current.dato+",");
+            preorden(current.izq);
+            preorden(current.der);
+        }
+        
+    }
     
-	/**
-	 * Esté método manda a llamar un método que es recursivo que ordena nuestro arbol en el recorrido preorden, raiz, izquierda y derecha
-	 * 
-	 */
+    /**
+     * Esté método manda a llamar un método que es recursivo que ordena nuestro arbol en el recorrido preorden, raiz, izquierda y derecha
+     * 
+     */
     
-	public void preorden() {
-		preorden(this.root);
-		System.out.println();
-	}
-	
+    public void preorden() {
+        preorden(this.root);
+        System.out.println();
+    }
+    
 
-	private void inorden(Nodo<E> current){
+    private void inorden(Nodo<E> current){
         if (current!=null) {
-        	inorden(current.izq);
-        	System.out.print( current.dato + ", "  );
-        	inorden(current.der);
+            inorden(current.izq);
+            System.out.print( current.dato + ", "  );
+            inorden(current.der);
         }
     }
-	
-	/**
-	 * Esté método que manda a llamar un metodo que es recursivo que ordena nuestro arbol en el recorrido preorden,  izquierda,raiz y derecha
-	 * @param current nuestor nodo ya que usamos recursivida
-	 */
-	public void inorden() {
-		inorden(this.root);
-		System.out.println();
-	}
-	
-	private void posorden(Nodo<E> current) {
-		if(current!=null) {
-			posorden(current.izq);
-			posorden(current.der);
-			System.out.print(current.dato + ", "  );
-		}
-	}
-	
-	/**
-	 * Esté método que manda a llamar un método es recursivo que ordena nuestro arbol en el recorrido preorden,  izquierda, derecha y raiz
-	 * @param current nuestor nodo ya que usamos recursivida
-	 */
-	
-	public void posorden() {
-		posorden(this.root);
-		System.out.println();
-	}
-	
+    
+    /**
+     * Esté método que manda a llamar un metodo que es recursivo que ordena nuestro arbol en el recorrido preorden,  izquierda,raiz y derecha
+     * @param current nuestor nodo ya que usamos recursivida
+     */
+    public void inorden() {
+        inorden(this.root);
+        System.out.println();
+    }
+    
+    private void posorden(Nodo<E> current) {
+        if(current!=null) {
+            posorden(current.izq);
+            posorden(current.der);
+            System.out.print(current.dato + ", "  );
+        }
+    }
+    
+    /**
+     * Esté método que manda a llamar un método es recursivo que ordena nuestro arbol en el recorrido preorden,  izquierda, derecha y raiz
+     * @param current nuestor nodo ya que usamos recursivida
+     */
+    
+    public void posorden() {
+        posorden(this.root);
+        System.out.println();
+    }
+    
 }
 
 // * ---------------- Clase Nodo ----------------

@@ -38,8 +38,8 @@ public class AVL<E extends Comparable<E>> {
         avl.insertar(5);
         avl.insertar(27);
 
-       System.out.println(avl.remover(26));
-       System.out.println(avl.contiene(26));
+       System.out.println(avl.remover(13));
+       System.out.println(avl.contiene(13));
        
     }
 
@@ -135,17 +135,14 @@ public class AVL<E extends Comparable<E>> {
             }
             tmp.izq = null;
         } else { // Tiene los dos subarboles
-            if (prev.izq == tmp) {
-                prev.izq = sucesor(tmp.der);
-            } else {
-                prev.der = sucesor(tmp.der);
-            }
-            tmp.izq = null;
+            tmp.dato=remover(sucesor(tmp).dato);
+            this.size++;
         }
+        this.size--;
         return dato;
     }
 
-    public Nodo<E> sucesor(Nodo<E> tmp) {
+    private Nodo<E> sucesor(Nodo<E> tmp) {
         if (tmp.izq == null)
             return tmp;
         return sucesor(tmp.izq);

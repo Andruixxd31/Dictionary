@@ -119,7 +119,7 @@ public class AVL<E extends Comparable<E>> {
                 prev.izq = tmp.der;
             }
             tmp.der = null;
-            tmp.dato = null;git
+            tmp.dato = null;
 
         } else if (tmp.der == null) { // Hay subarbol izquierdo
             if (prev.izq == tmp) {
@@ -201,11 +201,60 @@ public class AVL<E extends Comparable<E>> {
         return tmp;
     }
 
+    private void actualizar(Nodo<E> nodo) {
+
+        int alturaNodoIzq = (nodo.izq == null) ? -1 : nodo.izq.altura;
+        int alturaNodoDer = (nodo.der == null) ? -1 : nodo.der.altura;
+
+        nodo.altura = 1 + Math.max(alturaNodoIzq, alturaNodoDer);
+        nodo.fb = alturaNodoDer - alturaNodoIzq;
+    }
+
+    private Nodo balance(Nodo nodo) {
+
+        // izq heavy subtree.
+        if (nodo.fb == -2) {
+            // izq-izq case.
+            if (nodo.izq.fb <= 0) {
+                // return izqizqCase(node);
+            } else {
+                // return izqderCase(node);
+            }
+            // der heavy subtree needs balancing.
+        } else if (nodo.fb == +2) {
+            // der-der case.
+            if (nodo.der.fb >= 0) {
+                // return derderCase(node);
+                // der-izq case.
+            } else {
+                // return derizqCase(node);
+            }
+        }
+        // Node either has a balance factor of 0, +1 or -1 which is fine.
+        return nodo;
+    }
+
+    private Nodo casoIzq(Nodo nodo) {
+        return nodo;
+    }
+
+    private Nodo casoIzqIzq(Nodo nodo) {
+        return nodo;
+    }
+
+    private Nodo casoDer(Nodo nodo) {
+        return nodo;
+    }
+
+    private Nodo casoDerDer(Nodo nodo) {
+
+        return nodo;
+    }
+
     /**
      * Esté método manda a llamar un método que es recursivo que ordena nuestro
      * arbol en el recorrido preorden, raiz, izquierda y derecha
      */
-
     public void preorden() {
         preorden(this.root);
         System.out.println();

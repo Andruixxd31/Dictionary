@@ -11,6 +11,7 @@ public class AVL<E extends Comparable<E>> {
 
     private Nodo<E> root;
     private int size;
+    List<Nodo<E>> hijos;
 
     // * ---------------- Constructor ----------------
 
@@ -25,61 +26,63 @@ public class AVL<E extends Comparable<E>> {
 
         AVL avl = new AVL();
         avl.insertar(8);
-        avl.insertar(3);
-        avl.insertar(6);
+        avl.insertar(1);
+        avl.insertar(5);
         avl.insertar(7);
         avl.insertar(13);
         avl.insertar(11);
         avl.insertar(26);
         avl.insertar(0);
         avl.insertar(14);
-        avl.insertar(-2);
         avl.insertar(2);
         avl.insertar(5);
 
-        System.out.println(avl.remover(11));
+        // System.out.println(avl.remover(6));
+        // avl.preOrder();
+        avl.nivel();
     }
 
     // * ---------------- Métodos ----------------
 
-    // llama al metodo de insertar con el nodo the root para comparar
-    public void insertar(E valor) {
-        Nodo<E> tmp = this.root;
-        insertar(valor, tmp);
-        // if else con compare para mover el current a izq o der
-        // cuando no se encuentre hay que llamar a inserta de nuevo
+    private void preOrder(Nodo<E> current) {
+        if (current != null) {
+            System.out.println(current.dato + ",");
+            preOrder(current.izq);
+            preOrder(current.der);
+        }
     }
 
-    // Todo Optimizar el codigo
-    // Todo en un if aparte manejar la creación de los nodos en vez de tenor dos
-    // Todo repetidos. Tal vez se necesite un nodo Prev;
-    // En este se encuentra el lugar del nodo para insertar
-    private void insertar(E valor, Nodo<E> tmp) {
-        if (this.size == 0) {
-            this.root = new Nodo<E>(valor);
-            this.size++;
-            return;
+    public void preOrder() {
+        preOrder(this.root);
+        System.out.println();
+    }
+
+    // llama al metodo de insertar con el nodo the root para comparar
+    public boolean insertar(E valor) {
+        if (valor == null)
+            return false;
+        if (!contiene(valor)) {
+            this.root = insertar(valor, root);
+            size++;
+            return true;
         }
+        return false;
+    }
+
+    private Nodo<E> insertar(E valor, Nodo<E> tmp) {
+        if (tmp == null)
+            return new Nodo(valor);
 
         int cmp = valor.compareTo(tmp.dato);
 
         if (cmp < 0) {
-            if (tmp.izq == null) {
-                tmp.izq = new Nodo<E>(valor);
-                this.size++;
-                return;
-            }
-            insertar(valor, tmp.izq);
-        } else if (cmp > 0) {
-            if (tmp.der == null) {
-                tmp.der = new Nodo<E>(valor);
-                this.size++;
-                return;
-            }
-            insertar(valor, tmp.der);
-        } else { // Caso donde el elemento ya existe en el árbol
-            return;
+            tmp.izq = insertar(valor, tmp.izq);
+
+        } else {
+            tmp.der = insertar(valor, tmp.der);
         }
+        actualizar(tmp);
+        return balance(tmp);
     }
 
     /**
@@ -89,56 +92,43 @@ public class AVL<E extends Comparable<E>> {
      * @param dato elemento a eliminar que indicó el usuario
      * @return
      */
-    public E remover(E dato) {
-        Nodo<E> tmp = this.root;
-        return remover(dato, tmp);
+    public boolean remover(E dato) {
+        if (dato == null)
+            return false;
+        if (contiene(dato)) {
+            this.root = remover(dato, this.root);
+            this.size--;
+            return true;
+        }
+        return false;
     }
 
-    private E remover(E dato, Nodo<E> tmp) {
+    private Nodo<E> remover(E dato, Nodo<E> tmp) {
         if (!contiene(dato))
-            throw new NoSuchElementException("El dato no esta");
+            throw new NoSuchElementException("El dato no está dentro del árbol");
 
         int cmp = dato.compareTo(tmp.dato);
+        // System.out.println("CMP:" + cmp);
 
-        Nodo<E> prev = null;
-        if (cmp < 0) {
-            prev = tmp;
-            return remover(dato, tmp.izq);
-        } else if (cmp > 0) {
-            prev = tmp;
-            return remover(dato, tmp.der);
+        if (cmp < 0)
+            tmp.izq = remover(dato, tmp.izq);
+        else if (cmp > 0)
+            tmp.der = remover(dato, tmp.der);
+        else {
+            if (tmp.izq == null)
+                return tmp.der;
+            else if (tmp.der == null)
+                return tmp.izq;
+            else {
+                if (tmp.izq.altura > tmp.der.altura)
+                    tmp.izq = remover(sucesor(tmp).dato, tmp.izq);
+                else
+                    tmp.der = remover(sucesor(tmp).dato, tmp.der);
+            }
         }
 
-        // * 3 casos
-        if (tmp.izq == null && tmp.der == null) { // Nodo hoja
-            tmp.dato = null;
-        } else if (tmp.izq == null) { // hay subarbol dereche
-            if (prev.der == tmp) {
-                prev.der = tmp.der;
-            } else {
-                prev.izq = tmp.der;
-            }
-            tmp.der = null;
-            tmp.dato = null;
-
-        } else if (tmp.der == null) { // Hay subarbol izquierdo
-            if (prev.izq == tmp) {
-                prev.izq = tmp.izq;
-            } else {
-                prev.der = tmp.izq;
-            }
-            tmp.dato = null;
-            tmp.izq = null;
-        } else { // Tiene los dos subarboles
-            if (prev.izq == tmp) {
-                prev.izq = sucesor(tmp.der);
-            } else {
-                prev.der = sucesor(tmp.der);
-            }
-            tmp.dato = null;
-            tmp.izq = null;
-        }
-        return dato;
+        actualizar(tmp);
+        return balance(tmp);
     }
 
     public Nodo<E> sucesor(Nodo<E> tmp) {
@@ -210,45 +200,58 @@ public class AVL<E extends Comparable<E>> {
         nodo.fb = alturaNodoDer - alturaNodoIzq;
     }
 
-    private Nodo balance(Nodo nodo) {
-
-        // izq heavy subtree.
+    private Nodo<E> balance(Nodo<E> nodo) {
         if (nodo.fb == -2) {
-            // izq-izq case.
             if (nodo.izq.fb <= 0) {
-                // return izqizqCase(node);
+                return casoIzqIzq(nodo);
             } else {
-                // return izqderCase(node);
+                return casoIzqDer(nodo);
             }
-            // der heavy subtree needs balancing.
-        } else if (nodo.fb == +2) {
-            // der-der case.
+        } else if (nodo.fb == 2) {
             if (nodo.der.fb >= 0) {
-                // return derderCase(node);
-                // der-izq case.
+                return casoDerDer(nodo);
             } else {
-                // return derizqCase(node);
+                return casoDerIzq(nodo);
             }
         }
-        // Node either has a balance factor of 0, +1 or -1 which is fine.
+        // No se necesita balancear el arbol
         return nodo;
     }
 
-    private Nodo casoIzq(Nodo nodo) {
-        return nodo;
+    private Nodo<E> casoIzqIzq(Nodo<E> nodo) {
+        return rotacionDer(nodo);
     }
 
-    private Nodo casoIzqIzq(Nodo nodo) {
-        return nodo;
+    private Nodo<E> casoIzqDer(Nodo<E> nodo) {
+        nodo.izq = rotacionIzq(nodo.izq);
+        return casoIzqIzq(nodo);
     }
 
-    private Nodo casoDer(Nodo nodo) {
-        return nodo;
+    private Nodo<E> casoDerDer(Nodo<E> nodo) {
+        return rotacionIzq(nodo);
     }
 
-    private Nodo casoDerDer(Nodo nodo) {
+    private Nodo casoDerIzq(Nodo nodo) {
+        nodo.der = rotacionDer(nodo.der);
+        return casoDerDer(nodo);
+    }
 
-        return nodo;
+    private Nodo<E> rotacionIzq(Nodo<E> nodo) {
+        Nodo<E> padre = nodo.der;
+        nodo.der = padre.izq;
+        padre.izq = nodo;
+        actualizar(nodo);
+        actualizar(padre);
+        return padre;
+    }
+
+    private Nodo<E> rotacionDer(Nodo<E> nodo) {
+        Nodo<E> padre = nodo.izq;
+        nodo.izq = padre.der;
+        padre.der = nodo;
+        actualizar(nodo);
+        actualizar(padre);
+        return padre;
     }
 
     /**

@@ -27,6 +27,7 @@ public class AVL<E extends Comparable<E>> {
         AVL avl = new AVL();
         avl.insertar(8);
         avl.insertar(1);
+        avl.insertar(0);
         avl.insertar(5);
         avl.insertar(7);
         avl.insertar(13);
@@ -40,9 +41,39 @@ public class AVL<E extends Comparable<E>> {
         // System.out.println(avl.remover(6));
         // avl.preOrder();
         avl.nivel();
+        avl.imprimirArb();
     }
 
     // * ---------------- Métodos ----------------
+    public boolean imprimirArb() {
+        if (this.root == null) {
+            return false;
+        }
+        Nodo<E> current = this.root;
+        imprimirArb(current, 0, 5);
+        return true;
+    }
+
+    private void imprimirArb(Nodo<E> actual, int espacio, int cuenta) {
+        if (actual == null)
+            return;
+
+        // Incrementar la distancia
+        espacio += cuenta;
+
+        // Der
+        imprimirArb(actual.der, espacio, cuenta);
+
+        // Print current node after espacio
+        // cuenta
+        System.out.print("\n");
+        for (int i = cuenta; i < espacio; i++)
+            System.out.print(" ");
+        System.out.print(actual.dato + "\n");
+
+        // Izquierdo
+        imprimirArb(actual.izq, espacio, cuenta);
+    }
 
     private void preOrder(Nodo<E> current) {
         if (current != null) {
@@ -376,4 +407,29 @@ class Nodo<E extends Comparable<E>> {
         this.izq = izq;
         this.der = der;
     }
+
+    public Nodo<E> getIzq() {
+        return izq;
+    }
+
+    public void setIzq(Nodo<E> izq) {
+        this.izq = izq;
+    }
+
+    public Nodo<E> getDer() {
+        return der;
+    }
+
+    public void setDer(Nodo<E> der) {
+        this.der = der;
+    }
+
+    public E getDato() {
+        return dato;
+    }
+
+    public void setDato(E dato) {
+        this.dato = dato;
+    }
+
 }

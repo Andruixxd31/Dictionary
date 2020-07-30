@@ -25,28 +25,164 @@ public class AVL<E extends Comparable<E>> {
     public static void main(String[] args) {
 
         AVL avl = new AVL();
-        avl.insertar(8);
-        avl.insertar(1);
-        avl.insertar(0);
-        avl.insertar(5);
-        avl.insertar(7);
-        avl.insertar(13);
-        avl.insertar(11);
-        avl.insertar(26);
-        avl.insertar(0);
-        avl.insertar(14);
-        avl.insertar(2);
-        avl.insertar(5);
+        Scanner input = new Scanner(System.in);
+        int num = 0;
+        int var;
+      
+        System.out.println("  ,---.   ,------.  ,-----.    ,-----.  ,--.        ,---.   ,--.   ,--. ,--. ");
+        System.out.println(" /  O  \\  |  .--. ' |  |) /_  '  .-.  ' |  |       /  O  \\   \\  `.'  /  |  | ");
+        System.out.println("|  .-.  | |  '--'.' |  .-.  \\ |  | |  | |  |      |  .-.  |   \\     /   |  |  ");
+        System.out.println("|  | |  | |  |\\  \\  |  '--' / '  '-'  ' |  '--.   |  | |  |    \\   /    |  '--. ");
+        System.out.println("`--' `--' `--' '--' `------'   `-----'  `-----'   `--' `--'     `-'     `-----' ");
+        
+        System.out.println("   Autores: José Luis Aguilar Nucamendi y Andres Díaz de León Valdés");
+        System.out.println();
+        
+        while(num!=9) {
+            System.out.println();
+            System.out.println("Inserte una de las siguientes opciones: ");
+            System.out.println("1. Insertar");
+            System.out.println("2. Eliminar");
+            System.out.println("3. Buscar");
+            System.out.println("4. Preorden");
+            System.out.println("5. Inorden");
+            System.out.println("6. Postorden");
+            System.out.println("7. Nivel");
+            System.out.println("8. Imprimir Árbol");
+            System.out.println("9. Salir");
 
-        // System.out.println(avl.remover(6));
-        // avl.preOrder();
-        avl.nivel();
-        avl.imprimirArb();
+            try {
+
+                System.out.print(">> ");
+                num = input.nextInt();
+                
+                switch (num) {
+                    case 1:
+                        System.out.print("Ingresa un número a insertar al árbol:\n>> ");
+                        var = input.nextInt();
+                        avl.insertar(var);
+                        System.out.println("Impresión del Árbol:");
+                        avl.imprimirArb();
+                        System.out.println();
+                        break;
+                    case 2:
+                        System.out.print("Ingresa un número a eliminar en el árbol:\n>> ");
+                        var = input.nextInt();
+                        avl.remover(var);
+                        System.out.println("Impresión del Árbol:");
+                        avl.imprimirArb();
+                        System.out.println();
+                        break;  
+                    case 3:
+                        System.out.print("Ingresa un número a buscar en el árbol:\n>> ");
+                        var = input.nextInt();
+                        avl.contiene(var);
+                        break;
+                    case 4:
+                        System.out.println("1. Imprimir todo el arbol:");
+                        System.out.print("2. Imprimir desde un elemento (subarbol):\n>> ");
+                        int opPreorden = input.nextInt();
+                        if (opPreorden == 1) {
+                            System.out.print("Preorden: ");
+                            avl.preorden();
+                        } else if (opPreorden == 2) {
+                            System.out.print("Valor a iniciar el preorden: ");
+                            int valor = input.nextInt();
+                            System.out.print("Preorden: ");
+                            avl.preorden(valor);
+                        } else {
+                            System.out.println("No ingreso una opción valida");
+                        }
+                        break;
+                    case 5:
+                        System.out.println("1. Imprimir todo el arbol:");
+                        System.out.print("2. Imprimir desde un elemento (subarbol):\n>> ");
+                        int opInorden = input.nextInt();
+                        if (opInorden == 1) {
+                            System.out.print("Inorden: ");
+                            avl.inorden();
+                        } else if (opInorden == 2) {
+                            System.out.print("Valor a iniciar el inorden: ");
+                            int valor = input.nextInt();
+                            System.out.print("Inorden: ");
+                            avl.inorden(valor);
+                        } else {
+                            System.out.println("No ingreso una opción valida");
+                        }
+                        break;
+                    case 6:
+                        System.out.println("1. Imprimir todo el arbol:");
+                        System.out.print("2. Imprimir desde un elemento (subarbol):\n>> ");
+                        int opPostorder = input.nextInt();
+                        if (opPostorder == 1) {
+                            System.out.print("Postorden: ");
+                            avl.postorden();
+                        } else if (opPostorder == 2) {
+                            System.out.print("Valor a iniciar el inorden: ");
+                            int valor = input.nextInt();
+                            System.out.print("Postorden: ");
+                            avl.postorden(valor);
+                        } else {
+                            System.out.println("No ingreso una opción valida");
+                        }
+                        break;
+                    case 7:
+                        System.out.println("1. Imprimir todo el arbol:");
+                        System.out.print("2. Imprimir desde un elemento (subarbol):\n>> ");
+                        int opNivel = input.nextInt();
+                        if (opNivel == 1) {
+                            System.out.print("Nivel: ");
+                            avl.nivel();
+                        } else if (opNivel == 2) {
+                            System.out.print("Valor a iniciar el nivel: ");
+                            int valor = input.nextInt();
+                            System.out.print("Nivel: ");
+                            avl.nivel(valor);
+                        } else {
+                            System.out.println("No ingreso una opción valida");
+                        }
+                        break;
+                    case 8:
+                         System.out.println("Impresión del Árbol:");
+                         avl.imprimirArb();
+                         System.out.println();
+                        break;
+                    case 9:
+                        
+                        break;
+                    default:
+                        System.out.println("___   ___ ");
+                        System.out.println("\\  \\ /  / ");
+                        System.out.println(" \\  V  /  ");
+                        System.out.println("  >   <   ¡CASO NO VALIDO, INGRESASTE UN DATO NO VALIDO!");
+                        System.out.println(" /  .  \\  ");
+                        System.out.println("/__/ \\__\\ ");
+                        System.out.println();
+                }
+            }catch(InputMismatchException e) {
+                System.out.println("Debes ingresar un dato válido:");
+                input.nextInt();
+            }
+        }
+
+        // avl.insertar(8);
+        // avl.insertar(1);
+        // avl.insertar(0);
+        // avl.insertar(5);
+        // avl.insertar(7);
+        // avl.insertar(13);
+        // avl.insertar(11);
+        // avl.insertar(26);
+        // avl.insertar(0);
+        // avl.insertar(14);
+        // avl.insertar(2);
+        // avl.insertar(5);
     }
 
     // * ---------------- Métodos ----------------
     public boolean imprimirArb() {
         if (this.root == null) {
+            System.out.println("El arbol está vacio");
             return false;
         }
         Nodo<E> current = this.root;
@@ -73,19 +209,6 @@ public class AVL<E extends Comparable<E>> {
 
         // Izquierdo
         imprimirArb(actual.izq, espacio, cuenta);
-    }
-
-    private void preOrder(Nodo<E> current) {
-        if (current != null) {
-            System.out.println(current.dato + ",");
-            preOrder(current.izq);
-            preOrder(current.der);
-        }
-    }
-
-    public void preOrder() {
-        preOrder(this.root);
-        System.out.println();
     }
 
     // llama al metodo de insertar con el nodo the root para comparar
@@ -161,13 +284,22 @@ public class AVL<E extends Comparable<E>> {
         actualizar(tmp);
         return balance(tmp);
     }
-
+    /***
+     * Método que encuentra el sucesor de un nodo
+     * @param tmp el nodo a encontrar su sucesor
+     * @return el nodo
+     */
     public Nodo<E> sucesor(Nodo<E> tmp) {
         if (tmp.izq == null)
             return tmp;
         return sucesor(tmp.izq);
     }
-
+    
+    /**
+     * Metodo que nos identifica si el valor esta dentro de nuestro arbol
+     * @param dato a buscar
+     * @return true si se encuentra, false si no
+     */
     public boolean contiene(E dato) {
         Nodo<E> tmp = this.root;
         return contiene(dato, tmp);
@@ -185,7 +317,12 @@ public class AVL<E extends Comparable<E>> {
         else
             return true;
     }
-
+    
+    /***
+     * Método similar al de contiene, pero este nos regresa el dato que buscabamos
+     * @param valor dato a buscar
+     * @return el dato si se encuentra
+     */
     public E buscarDato(E valor) {
         if (this.root == null)
             throw new NoSuchElementException("El árbol está vacio");
@@ -203,7 +340,12 @@ public class AVL<E extends Comparable<E>> {
         }
         return tmp.dato;
     }
-
+    
+    /**
+     * Método para buscar el nodo del valor que ingresamos dentro de nuestro arbol
+     * @param valor el valor a buscar
+     * @return nos retorna su nodo del valor
+     */
     public Nodo<E> buscarNodo(E valor) {
         if (this.root == null)
             throw new NoSuchElementException("El árbol está vacio");

@@ -25,28 +25,128 @@ public class AVL<E extends Comparable<E>> {
     public static void main(String[] args) {
 
         AVL avl = new AVL();
-        avl.insertar(8);
-        avl.insertar(1);
-        avl.insertar(0);
-        avl.insertar(5);
-        avl.insertar(7);
-        avl.insertar(13);
-        avl.insertar(11);
-        avl.insertar(26);
-        avl.insertar(0);
-        avl.insertar(14);
-        avl.insertar(2);
-        avl.insertar(5);
+        Scanner input = new Scanner(System.in);
+        int num = 0;
+        int var;
 
-        // System.out.println(avl.remover(6));
-        // avl.preOrder();
-        avl.nivel();
-        avl.imprimirArb();
+        System.out.println("  ,---.   ,------.  ,-----.    ,-----.  ,--.        ,---.   ,--.   ,--. ,--. ");
+        System.out.println(" /  O  \\  |  .--. ' |  |) /_  '  .-.  ' |  |       /  O  \\   \\  `.'  /  |  | ");
+        System.out.println("|  .-.  | |  '--'.' |  .-.  \\ |  | |  | |  |      |  .-.  |   \\     /   |  |  ");
+        System.out.println("|  | |  | |  |\\  \\  |  '--' / '  '-'  ' |  '--.   |  | |  |    \\   /    |  '--. ");
+        System.out.println("`--' `--' `--' '--' `------'   `-----'  `-----'   `--' `--'     `-'     `-----' ");
+
+        do {
+
+            System.out.println("Inserte una de las siguientes opciones: ");
+            System.out.println("1. Insertar");
+            System.out.println("2. Eliminar");
+            System.out.println("3. Buscar");
+            System.out.println("4. Preorden");
+            System.out.println("5. Inorden");
+            System.out.println("6. Postorden");
+            System.out.println("7. Nivel");
+
+            System.out.print(">> ");
+            num = input.nextInt();
+
+            switch (num) {
+                case 1:
+                    System.out.print("Ingresa un número a insertar al árbol:\n>> ");
+                    var = input.nextInt();
+                    avl.insertar(var);
+                    avl.imprimirArb();
+                    break;
+                case 2:
+                    System.out.print("Ingresa un número a eliminar en el árbol:\n>> ");
+                    var = input.nextInt();
+                    avl.remover(var);
+                    avl.imprimirArb();
+                    break;
+                case 3:
+                    System.out.print("Ingresa un número a buscar en el árbol:\n>> ");
+                    var = input.nextInt();
+                    avl.contiene(var);
+                    break;
+                case 4:
+                    System.out.println("1. Imprimir todo el arbol:");
+                    System.out.print("2. Imprimir desde un elemento (subarbol):\n>> ");
+                    int opPreorden = input.nextInt();
+                    if (opPreorden == 1) {
+                        avl.preorden();
+                    } else if (opPreorden == 2) {
+                        System.out.print("Valor a iniciar el preorden: ");
+                        int valor = input.nextInt();
+                        avl.preorden(valor);
+                    } else {
+                        System.out.println("No ingreso una opción valida");
+                    }
+                    break;
+                case 5:
+                    System.out.println("1. Imprimir todo el arbol:");
+                    System.out.print("2. Imprimir desde un elemento (subarbol):\n>> ");
+                    int opInorden = input.nextInt();
+                    if (opInorden == 1) {
+                        avl.inorden();
+                    } else if (opInorden == 2) {
+                        System.out.print("Valor a iniciar el inorden: ");
+                        int valor = input.nextInt();
+                        avl.inorden(valor);
+                    } else {
+                        System.out.println("No ingreso una opción valida");
+                    }
+                    break;
+                case 6:
+                    System.out.println("1. Imprimir todo el arbol:");
+                    System.out.println("2. Imprimir desde un elemento (subarbol):\n>> ");
+                    int opPostorder = input.nextInt();
+                    if (opPostorder == 1) {
+                        avl.postorden();
+                    } else if (opPostorder == 2) {
+                        System.out.print("Valor a iniciar el inorden: ");
+                        int valor = input.nextInt();
+                        avl.postorden(valor);
+                    } else {
+                        System.out.println("No ingreso una opción valida");
+                    }
+                    break;
+                case 7:
+                    System.out.println("1. Imprimir todo el arbol:");
+                    System.out.println("2. Imprimir desde un elemento (subarbol):\n>> ");
+                    int opNivel = input.nextInt();
+                    if (opNivel == 1) {
+                        avl.nivel();
+                    } else if (opNivel == 2) {
+                        System.out.print("Valor a iniciar el nivel: ");
+                        int valor = input.nextInt();
+                        avl.nivel(valor);
+                    } else {
+                        System.out.println("No ingreso una opción valida");
+                    }
+                    break;
+                default:
+                    System.out.println("Caso no valido");
+            }
+
+        } while (num > 0 && num < 7);
+
+        // avl.insertar(8);
+        // avl.insertar(1);
+        // avl.insertar(0);
+        // avl.insertar(5);
+        // avl.insertar(7);
+        // avl.insertar(13);
+        // avl.insertar(11);
+        // avl.insertar(26);
+        // avl.insertar(0);
+        // avl.insertar(14);
+        // avl.insertar(2);
+        // avl.insertar(5);
     }
 
     // * ---------------- Métodos ----------------
     public boolean imprimirArb() {
         if (this.root == null) {
+            System.out.println("El arbol esta vacio");
             return false;
         }
         Nodo<E> current = this.root;
@@ -58,34 +158,13 @@ public class AVL<E extends Comparable<E>> {
         if (actual == null)
             return;
 
-        // Incrementar la distancia
         espacio += cuenta;
-
-        // Der
         imprimirArb(actual.der, espacio, cuenta);
-
-        // Print current node after espacio
-        // cuenta
         System.out.print("\n");
         for (int i = cuenta; i < espacio; i++)
             System.out.print(" ");
         System.out.print(actual.dato + "\n");
-
-        // Izquierdo
         imprimirArb(actual.izq, espacio, cuenta);
-    }
-
-    private void preOrder(Nodo<E> current) {
-        if (current != null) {
-            System.out.println(current.dato + ",");
-            preOrder(current.izq);
-            preOrder(current.der);
-        }
-    }
-
-    public void preOrder() {
-        preOrder(this.root);
-        System.out.println();
     }
 
     // llama al metodo de insertar con el nodo the root para comparar
